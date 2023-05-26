@@ -1,36 +1,37 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const helmet = require("helmet");
-const limiter = require("./middlewares/rateLimit");
-const router = require("./routes");
-const { errors } = require("celebrate");
-const { requestLogger, errorLogger } = require("./middlewares/logger");
-const serverError = require("./middlewares/serverError");
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const helmet = require('helmet');
+const { errors } = require('celebrate');
+const router = require('./routes');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const serverError = require('./middlewares/serverError');
+const limiter = require('./middlewares/rateLimit');
+
 const { PORT = 3000 } = process.env;
 
 const app = express();
+app.use(cors());
 
-mongoose.set("strictQuery", true);
+mongoose.set('strictQuery', true);
 mongoose
-  .connect("mongodb://127.0.0.1:27017/bitfilmsdb")
+  .connect('mongodb://127.0.0.1:27017/bitfilmsdb')
   .then(() => {
-    console.log("База данных подключена");
+    console.log('База данных подключена');
   })
   .catch((err) => {
-    console.log("Ошибка при подключении базы данных");
+    console.log('Ошибка при подключении базы данных');
     console.error(err);
   });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 app.use(helmet());
-app.use(limiter);
 app.use(requestLogger);
+app.use(limiter);
 app.use(router);
 app.use(errorLogger);
 app.use(errors());

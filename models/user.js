@@ -7,6 +7,12 @@ const isEmail = require('validator/lib/isEmail');
 const UnautorizedError = require('../errors/UnautorizedError');
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    minlength: [2, 'Must be at least 2 characters.'],
+    maxlength: [30, 'Must be at less than 30 characters.'],
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -17,13 +23,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     select: false,
-  },
-  name: {
-    type: String,
-    default: 'Имя',
-    minlength: [2, 'Must be at least 2 characters.'],
-    maxlength: [30, 'Must be at less than 30 characters.'],
-    required: true,
   },
 });
 

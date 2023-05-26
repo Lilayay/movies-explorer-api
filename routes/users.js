@@ -1,5 +1,8 @@
+const express = require('express');
+
 const { celebrate, Joi } = require('celebrate');
-const router = require('express').Router();
+
+const router = express.Router();
 
 const {
   getUserInfo, updateUser,
@@ -9,8 +12,8 @@ router.get('/users/me', getUserInfo);
 
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
+    name: Joi.string().min(2).max(30).required(),
     email: Joi.string().required().email(),
-    name: Joi.string().required().min(2).max(30),
   }),
 }), updateUser);
 

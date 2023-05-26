@@ -5,19 +5,44 @@ const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
-    .then((movie) => {
-      if (!movie) {
+    .then((movies) => {
+      if (!movies) {
         throw new NotFoundError('Фильм не найден');
       }
-      return res.send(movie);
+      return res.send(movies);
     })
     .catch((err) => next(err));
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const { country, director, duration, year, description, image, trailerLink, thumbnail, movieId, nameRU, nameEN } = req.body;
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+  } = req.body;
   const owner = req.user._id;
-  Movie.create({ country, director, duration, year, description, image, trailerLink, thumbnail, movieId, nameRU, nameEN, owner })
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+    owner,
+  })
     .then((movies) => res.send({ movies }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -30,14 +55,14 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
-    .then((Movie) => {
-      if (!Movie) {
+    .then((movies) => {
+      if (!movies) {
         throw new NotFoundError('Такого фильма не существует');
       }
-      if (!Movie.owner.equals(req.user._id)) {
+      if (!movies.owner.equals(req.user._id)) {
         return next(new ForbiddenError('Нельзя удалить чужой фильм'));
       }
-      return Movie.remove().then(() => res.send({ message: 'Фильм удален' }));
+      return movies.remove().then(() => res.send({ message: 'Фильм удален' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
