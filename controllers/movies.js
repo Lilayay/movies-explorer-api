@@ -54,21 +54,16 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
-    .orFail(() => {
-      throw new NotFoundError('Такого фильма не существует');
-    })
+  const { movieId } = req.params;
+  return Movie.findById(movieId)
     .then((movie) => {
-      const owner = movie.owner.toString();
-      if (req.user._id === owner) {
-        Movie.deleteOne(movie)
-          .then(() => {
-            res.send(movie);
-          })
-          .catch(next);
-      } else {
-        throw new ForbiddenError('Нельзя удалить чужой фильм');
+      if (!movie) {
+        throw new NotFoundError('Такого фильма не существует');
       }
+      if (!movie.owner.equals(req.user._id)) {
+        return next(new ForbiddenError('Нельзя удалить чужой фильм'));
+      }
+      return movie.remove().then(() => res.send({ message: 'Фильм удален' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
