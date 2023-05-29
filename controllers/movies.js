@@ -55,14 +55,20 @@ module.exports.createMovie = (req, res, next) => {
 
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
-    .then((movies) => {
-      if (!movies) {
-        throw new NotFoundError('Такого фильма не существует');
+    .orFail(() => {
+      throw new NotFoundError('Такого фильма не существует');
+    })
+    .then((movie) => {
+      const owner = movie.owner.toString();
+      if (req.user._id === owner) {
+        Movie.deleteOne(movie)
+          .then(() => {
+            res.send(movie);
+          })
+          .catch(next);
+      } else {
+        throw new ForbiddenError('Нельзя удалить чужой фильм');
       }
-      if (!movies.owner.equals(req.user._id)) {
-        return next(new ForbiddenError('Нельзя удалить чужой фильм'));
-      }
-      return movies.remove().then(() => res.send({ message: 'Фильм удален' }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
