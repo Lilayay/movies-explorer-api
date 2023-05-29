@@ -66,7 +66,6 @@ module.exports.deleteMovie = (req, res, next) => {
       return Movie.deleteOne().then(() => res.send({ message: 'Фильм удален' }));
     })
     .catch((err) => {
-      console.log(err);
       if (err.name === 'CastError') {
         next(new BadRequestError('Некорректный id фильма'));
       } else {
