@@ -6,13 +6,19 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const DuplicateError = require('../errors/DuplicateError');
 
+const {
+  USER_NOT_FOUND,
+  USER_DUPLICATES,
+  USER_DATA_INCORRECT,
+} = require('../utils/constants');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(USER_NOT_FOUND);
       }
       return res.send(user);
     })
@@ -30,15 +36,15 @@ module.exports.updateUser = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Такого пользователя не существует');
+        throw new NotFoundError(USER_NOT_FOUND);
       }
       return res.send(user);
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new DuplicateError('Такой пользователь уже существует'));
+        next(new DuplicateError(USER_DUPLICATES));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Ошибка при заполнении данных пользователя'));
+        next(new BadRequestError(USER_DATA_INCORRECT));
       } else {
         next(err);
       }
@@ -62,9 +68,9 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new DuplicateError('Такой пользователь уже существует'));
+        next(new DuplicateError(USER_DUPLICATES));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Ошибка при заполнении данных пользователя'));
+        next(new BadRequestError(USER_DATA_INCORRECT));
       } else {
         next(err);
       }

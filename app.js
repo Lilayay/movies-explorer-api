@@ -10,15 +10,14 @@ const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const serverError = require('./middlewares/serverError');
 const limiter = require('./middlewares/rateLimit');
-
-const { PORT = 3000 } = process.env;
+const { PORT, endpoint } = require('./utils/configuration');
 
 const app = express();
 app.use(cors());
 
 mongoose.set('strictQuery', true);
 mongoose
-  .connect('mongodb://127.0.0.1:27017/bitfilmsdb')
+  .connect(endpoint)
   .then(() => {
     console.log('База данных подключена');
   })

@@ -6,18 +6,25 @@ const isEmail = require('validator/lib/isEmail');
 
 const UnautorizedError = require('../errors/UnautorizedError');
 
+const {
+  MIN_LENGTH,
+  MAX_LENGTH,
+  EMAIL_ERROR,
+  EMAIL_PASSWORD_ERROR,
+} = require('../utils/constants');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: [2, 'Must be at least 2 characters.'],
-    maxlength: [30, 'Must be at less than 30 characters.'],
+    minlength: [2, MIN_LENGTH],
+    maxlength: [30, MAX_LENGTH],
     required: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: [isEmail, 'Некорректный адрес электронной почты'],
+    validate: [isEmail, EMAIL_ERROR],
   },
   password: {
     type: String,
@@ -30,13 +37,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnautorizedError('Неправильные почта или пароль'));
+        return Promise.reject(new UnautorizedError(EMAIL_PASSWORD_ERROR));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnautorizedError('Неправильные почта или пароль'));
+            return Promise.reject(new UnautorizedError(EMAIL_PASSWORD_ERROR));
           }
           return user;
         });
