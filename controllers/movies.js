@@ -63,7 +63,7 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params._id)
+  Movie.findOne({ movieId: req.params._id })
     .then((movie) => {
       if (!movie) {
         throw new NotFoundError(MOVIE_NOT_FOUND);
@@ -73,6 +73,7 @@ module.exports.deleteMovie = (req, res, next) => {
       }
       return Movie.findByIdAndRemove(req.params._id)
         .then(() => {
+          console.log("Ща как удалим")
           res.send(MOVIE_DELETED);
         });
     })
