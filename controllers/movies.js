@@ -71,7 +71,7 @@ module.exports.deleteMovie = (req, res, next) => {
       if (!movie.owner.equals(req.user._id)) {
         return next(new ForbiddenError(MOVIE_WRONG_OWNER));
       }
-      return Movie.findByIdAndRemove(req.params._id)
+      return Movie.deleteOne(movie._id)
         .then(() => {
           res.send(MOVIE_DELETED);
         });
