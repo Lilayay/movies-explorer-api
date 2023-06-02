@@ -4,7 +4,6 @@ const NO_MOVIES = 'Фильмы не найдены';
 const MOVIE_INCORRECT = 'Ошибка при заполнении данных о фильме';
 const MOVIE_NOT_FOUND = 'Такого фильма не существует';
 const MOVIE_WRONG_OWNER = 'Нельзя удалить чужой фильм';
-const MOVIE_DELETED = 'Фильм удален';
 const MOVIE_WRONG_ID = 'Некорректный id фильма';
 
 const USER_NOT_FOUND = 'Пользователь не найден';
@@ -30,7 +29,6 @@ module.exports = {
   MOVIE_NOT_FOUND,
   MOVIE_WRONG_OWNER,
   MOVIE_WRONG_ID,
-  MOVIE_DELETED,
   USER_NOT_FOUND,
   USER_DUPLICATES,
   USER_DATA_INCORRECT,

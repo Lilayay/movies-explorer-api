@@ -9,7 +9,6 @@ const {
   MOVIE_NOT_FOUND,
   MOVIE_WRONG_OWNER,
   MOVIE_WRONG_ID,
-  MOVIE_DELETED,
 } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
@@ -63,18 +62,21 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findOne({ movieId: req.params.movieId })
+  Movie.findById(req.params.movieId)
+    .orFail(() => {
+      throw new NotFoundError(MOVIE_NOT_FOUND);
+    })
     .then((movie) => {
-      if (!movie) {
-        throw new NotFoundError(MOVIE_NOT_FOUND);
+      const owner = movie.owner.toString();
+      if (req.user._id === owner) {
+        Movie.deleteOne(movie)
+          .then(() => {
+            res.send(movie);
+          })
+          .catch(next);
+      } else {
+        throw new ForbiddenError(MOVIE_WRONG_OWNER);
       }
-      if (!movie.owner.equals(req.user._id)) {
-        return next(new ForbiddenError(MOVIE_WRONG_OWNER));
-      }
-      return Movie.deleteOne(movie._id)
-        .then(() => {
-          res.send(MOVIE_DELETED);
-        });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
