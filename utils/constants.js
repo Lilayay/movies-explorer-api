@@ -5,12 +5,13 @@ const MOVIE_INCORRECT = 'Ошибка при заполнении данных �
 const MOVIE_NOT_FOUND = 'Такого фильма не существует';
 const MOVIE_WRONG_OWNER = 'Нельзя удалить чужой фильм';
 const MOVIE_WRONG_ID = 'Некорректный id фильма';
+const MOVIE_DELETED = 'Фильм удален';
 
 const USER_NOT_FOUND = 'Пользователь не найден';
 const USER_DUPLICATES = 'Такой пользователь уже существует';
 const USER_DATA_INCORRECT = 'Ошибка при заполнении данных пользователя';
 
-const UNAUTORIZED = 'Необходима авторизация';
+const UNAUTHORIZED = 'Необходима авторизация';
 
 const SERVER_ERROR = 'На сервере произошла ошибка';
 
@@ -29,10 +30,11 @@ module.exports = {
   MOVIE_NOT_FOUND,
   MOVIE_WRONG_OWNER,
   MOVIE_WRONG_ID,
+  MOVIE_DELETED,
   USER_NOT_FOUND,
   USER_DUPLICATES,
   USER_DATA_INCORRECT,
-  UNAUTORIZED,
+  UNAUTHORIZED,
   SERVER_ERROR,
   PAGE_NOT_FOUND,
   LINK_ERROR,
