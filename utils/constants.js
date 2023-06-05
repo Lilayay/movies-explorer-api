@@ -1,6 +1,5 @@
 const IS_URL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
-const NO_MOVIES = 'Фильмы не найдены';
 const MOVIE_INCORRECT = 'Ошибка при заполнении данных о фильме';
 const MOVIE_NOT_FOUND = 'Такого фильма не существует';
 const MOVIE_WRONG_OWNER = 'Нельзя удалить чужой фильм';
@@ -25,7 +24,6 @@ const EMAIL_PASSWORD_ERROR = 'Некорректный адрес электро
 
 module.exports = {
   IS_URL,
-  NO_MOVIES,
   MOVIE_INCORRECT,
   MOVIE_NOT_FOUND,
   MOVIE_WRONG_OWNER,

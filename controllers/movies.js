@@ -4,7 +4,6 @@ const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 const {
-  NO_MOVIES,
   MOVIE_INCORRECT,
   MOVIE_NOT_FOUND,
   MOVIE_WRONG_OWNER,
@@ -15,12 +14,9 @@ const {
 module.exports.getMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .then((movies) => {
-      if (!movies) {
-        throw new NotFoundError(NO_MOVIES);
-      }
-      return res.send(movies);
+      res.send(movies);
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports.createMovie = (req, res, next) => {
