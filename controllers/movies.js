@@ -69,7 +69,7 @@ module.exports.deleteMovie = (req, res, next) => {
       }
       return Movie.deleteOne(movie._id)
         .then(() => {
-          res.send(MOVIE_DELETED);
+          res.json({ message: MOVIE_DELETED });
         });
     })
     .catch((err) => {
